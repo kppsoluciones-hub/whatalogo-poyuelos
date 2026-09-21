@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Asadero de Aves Poyuelos - Catálogo digital. Pollo asado, combos y más directo por WhatsApp.">
+    <meta name="author" content="Asadero de Aves Poyuelos">
+    <title>Asadero de Aves Poyuelos - Catálogo Digital</title>
+    <style>
+        :root {
+            --primary: #dc2626;
+            --primary-light: #ef4444;
+            --primary-dark: #991b1b;
+            --accent: #7c2d12;
+            --neutral-50: #f9fafb;
+            --neutral-100: #f3f4f6;
+            --neutral-200: #e5e7eb;
+            --neutral-300: #d1d5db;
+            --neutral-400: #9ca3af;
+            --neutral-600: #4b5563;
+            --neutral-900: #111827;
+            --error: #dc2626;
+            --success: #16a34a;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --neutral-50: #0f172a;
+                --neutral-100: #1e293b;
+                --neutral-200: #334155;
+                --neutral-300: #475569;
+                --neutral-400: #94a3b8;
+                --neutral-600: #cbd5e1;
+                --neutral-900: #f8fafc;
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --neutral-50: #0f172a;
+            --neutral-100: #1e293b;
+            --neutral-200: #334155;
+            --neutral-300: #475569;
+            --neutral-400: #94a3b8;
+            --neutral-600: #cbd5e1;
+            --neutral-900: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--neutral-50);
+            color: var(--neutral-900);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .catalog {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            background: var(--neutral-50);
+        }
+
+        .header {
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header p {
+            color: var(--neutral-600);
+            font-size: 14px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .category-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 28px;
+            margin-bottom: 16px;
+            padding-left: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--neutral-200);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .product-card {
+                background: var(--neutral-100);
+                border-color: var(--neutral-300);
+            }
+        }
+
+        :root[data-theme="dark"] .product-card {
+            background: var(--neutral-100);
+            border-color: var(--neutral-300);
+        }
+
+        .product-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 160px;
+            background: linear-gradient(135deg, #fecaca, #fca5a5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .product-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.05);
+            pointer-events: none;
+        }
+
+        .product-image-emoji {
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-info {
+            padding: 16px;
+        }
+
+        .product-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--neutral-900);
+        }
+
+        .product-desc {
+            font-size: 12px;
+            color: var(--neutral-600);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .product-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .product-stock {
+            font-size: 12px;
+            color: var(--success);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .btn-add {
+            width: 100%;
+            padding: 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-add:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-add:active {
+            transform: scale(0.98);
+        }
+
+        .sidebar {
+            width: 360px;
+            background: white;
+            border-left: 1px solid var(--neutral-200);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .sidebar {
+                background: var(--neutral-100);
+            }
+        }
+
+        :root[data-theme="dark"] .sidebar {
+            background: var(--neutral-100);
+        }
+
+        .cart-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--neutral-200);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        .cart-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .cart-count {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .cart-empty {
+            text-align: center;
+            padding: 32px 16px;
+            color: var(--neutral-600);
+            font-size: 14px;
+        }
+
+        .cart-item {
+            background: var(--neutral-50);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid var(--neutral-200);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .cart-item {
+                background: var(--neutral-200);
+            }
+        }
+
+        :root[data-theme="dark"] .cart-item {
+            background: var(--neutral-200);
+        }
+
+        .cart-item-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: 4px;
+        }
+
+        .cart-item-price {
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .qty-btn {
+            width: 24px;
+            height: 24px;
+            border: 1px solid var(--neutral-300);
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--neutral-900);
+            transition: all 0.2s ease;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .qty-btn {
+                background: var(--neutral-100);
+            }
+        }
+
+        :root[data-theme="dark"] .qty-btn {
+            background: var(--neutral-100);
+        }
+
+        .qty-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .qty-display {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--neutral-900);
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .btn-remove {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: var(--error);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0;
+        }
+
+        .cart-footer {
+            padding: 20px;
+            border-top: 1px solid var(--neutral-200);
+            background: var(--neutral-50);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .cart-footer {
+                background: var(--neutral-200);
+            }
+        }
+
+        :root[data-theme="dark"] .cart-footer {
+            background: var(--neutral-200);
+        }
+
+        .cart-summary {
+            margin-bottom: 16px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--neutral-600);
+            margin-bottom: 6px;
+        }
+
+        .summary-row.total {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--neutral-900);
+            padding-top: 8px;
+            border-top: 1px solid var(--neutral-200);
+        }
+
+        .btn-checkout {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-checkout:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-checkout:disabled {
+            background: var(--neutral-300);
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                max-height: 40vh;
+                border-left: none;
+                border-top: 1px solid var(--neutral-200);
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="catalog">
+            <div class="header">
+                <h1>
+                    <div class="logo">🍗</div>
+                    Asadero de Aves Poyuelos
+                </h1>
+                <p>Pollo asado fresco - Combos y platos a la carta</p>
+            </div>
+
+            <!-- COMBOS -->
+            <div class="category-title">🎉 COMBOS</div>
+            <div class="products-grid" id="combosGrid"></div>
+
+            <!-- POLLO ASADO -->
+            <div class="category-title">🍗 POLLO ASADO</div>
+            <div class="products-grid" id="polloAsadoGrid"></div>
+
+            <!-- POLLO BROSTER -->
+            <div class="category-title">✨ POLLO BROSTER</div>
+            <div class="products-grid" id="polloBrosterGrid"></div>
+
+            <!-- PLATOS A LA CARTA -->
+            <div class="category-title">🍽️ PLATOS A LA CARTA</div>
+            <div class="products-grid" id="platosGrid"></div>
+
+            <!-- ADICIONALES -->
+            <div class="category-title">➕ ADICIONALES</div>
+            <div class="products-grid" id="adicionalesGrid"></div>
+
+            <!-- BEBIDAS -->
+            <div class="category-title">🥤 BEBIDAS</div>
+            <div class="products-grid" id="bebidasGrid"></div>
+        </div>
+
+        <div class="sidebar">
+            <div class="cart-header">
+                <h2>Tu Pedido</h2>
+                <div class="cart-count">
+                    <span id="itemCount">0</span> items
+                </div>
+            </div>
+
+            <div class="cart-items" id="cartItems">
+                <div class="cart-empty">Tu carrito está vacío</div>
+            </div>
+
+            <div class="cart-footer">
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">$0</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total:</span>
+                        <span id="total">$0</span>
+                    </div>
+                </div>
+
+                <button class="btn-checkout" id="checkoutBtn" disabled>
+                    📱 Enviar por WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const products = {
+            combos: [
+                { id: 1, name: "Combo 1", desc: "Pollo asado, papas salada, gaseosa y plátano", price: 40000, emoji: "🍗", image: "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=300&h=200&fit=crop" },
+                { id: 2, name: "Combo 2", desc: "Pollo broster, papas francesa, patacón y gaseosa", price: 47000, emoji: "🍗", image: "https://images.unsplash.com/photo-1585521537730-9c6400ca199e?w=300&h=200&fit=crop" },
+                { id: 3, name: "Combo Especial", desc: "Pollo asado, arepa, yuca y gaseosa", price: 42000, emoji: "🎉", image: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=300&h=200&fit=crop" }
+            ],
+            polloAsado: [
+                { id: 4, name: "1/2 Pollo Asado", desc: "Acompañado con papas salada y arepa", price: 22000, emoji: "🍗", image: "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=300&h=200&fit=crop&crop=faces" },
+                { id: 5, name: "1 Pollo Asado", desc: "Acompañado con papas salada y arepa", price: 42000, emoji: "🍗", image: "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=300&h=200&fit=crop" },
+                { id: 6, name: "Pechuga Asada", desc: "Con papas salada", price: 18000, emoji: "🍗", image: "https://images.unsplash.com/photo-1555939594-58d7cb561141?w=300&h=200&fit=crop" }
+            ],
+            polloBroster: [
+                { id: 7, name: "1/2 Pollo Broster", desc: "Papas francesa y ensalada", price: 24000, emoji: "✨", image: "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=300&h=200&fit=crop" },
+                { id: 8, name: "1 Pollo Broster", desc: "Papas francesa y ensalada", price: 45000, emoji: "✨", image: "https://images.unsplash.com/photo-1585521537730-9c6400ca199e?w=300&h=200&fit=crop" },
+                { id: 9, name: "Alitas Broster", desc: "Papas y salsa especial", price: 16000, emoji: "✨", image: "https://images.unsplash.com/photo-1527624122275-15d33b6b8d7d?w=300&h=200&fit=crop" }
+            ],
+            platos: [
+                { id: 10, name: "Carne a la Parrilla", desc: "Con yuca y arepa", price: 28000, emoji: "🥩", image: "https://images.unsplash.com/photo-1555939594-58d7cb561141?w=300&h=200&fit=crop" },
+                { id: 11, name: "Camarones a la Parrilla", desc: "Con arroz y plátano", price: 32000, emoji: "🦐", image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=300&h=200&fit=crop" },
+                { id: 12, name: "Pez a la Parrilla", desc: "Con yuca y tostones", price: 30000, emoji: "🐟", image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=300&h=200&fit=crop" }
+            ],
+            adicionales: [
+                { id: 13, name: "Papas Francesa", desc: "Porción individual", price: 8000, emoji: "🍟", image: "https://images.unsplash.com/photo-1566050364597-89f89805ff0d?w=300&h=200&fit=crop" },
+                { id: 14, name: "Papas Salada", desc: "Porción individual", price: 7000, emoji: "🥔", image: "https://images.unsplash.com/photo-1552621554-5fefe8c9ef14?w=300&h=200&fit=crop" },
+                { id: 15, name: "Arepa", desc: "Unidad", price: 3000, emoji: "🫓", image: "https://images.unsplash.com/photo-1585238341710-4b6c6650c913?w=300&h=200&fit=crop" },
+                { id: 16, name: "Plátano Frito", desc: "Porción", price: 6000, emoji: "🍌", image: "https://images.unsplash.com/photo-1584353471479-86697cd3b205?w=300&h=200&fit=crop" },
+                { id: 17, name: "Yuca Frita", desc: "Porción", price: 8000, emoji: "🍠", image: "https://images.unsplash.com/photo-1599599810694-e3ea7407180f?w=300&h=200&fit=crop" }
+            ],
+            bebidas: [
+                { id: 18, name: "Gaseosa Personal", desc: "330ml", price: 5000, emoji: "🥤", image: "https://images.unsplash.com/photo-1554866585-acbb73ce3362?w=300&h=200&fit=crop" },
+                { id: 19, name: "Gaseosa Grande", desc: "1.5L", price: 12000, emoji: "🥤", image: "https://images.unsplash.com/photo-1554866585-acbb73ce3362?w=300&h=200&fit=crop" },
+                { id: 20, name: "Cerveza", desc: "330ml", price: 6500, emoji: "🍺", image: "https://images.unsplash.com/photo-1608270861620-7892c3c62816?w=300&h=200&fit=crop" },
+                { id: 21, name: "Agua", desc: "500ml", price: 2500, emoji: "💧", image: "https://images.unsplash.com/photo-1535960859682-b02d3a9c7218?w=300&h=200&fit=crop" }
+            ]
+        };
+
+        let cart = {};
+
+        function formatPrice(price) {
+            return new Intl.NumberFormat('es-CO', {
+                style: 'currency',
+                currency: 'COP',
+                minimumFractionDigits: 0
+            }).format(price);
+        }
+
+        function renderCategory(containerId, categoryProducts) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = categoryProducts.map(product => `
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('${product.image}')">
+                        <span class="product-image-emoji">${product.emoji}</span>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-desc">${product.desc}</div>
+                        <div class="product-price">${formatPrice(product.price)}</div>
+                        <div class="product-stock">Disponible ✓</div>
+                        <button class="btn-add" onclick="addToCart(${product.id})">Agregar</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(productId) {
+            let product = null;
+            for (let category in products) {
+                product = products[category].find(p => p.id === productId);
+                if (product) break;
+            }
+
+            if (product) {
+                if (cart[productId]) {
+                    cart[productId].quantity += 1;
+                } else {
+                    cart[productId] = { ...product, quantity: 1 };
+                }
+                updateCart();
+            }
+        }
+
+        function updateQuantity(productId, change) {
+            if (cart[productId]) {
+                cart[productId].quantity += change;
+                if (cart[productId].quantity <= 0) {
+                    delete cart[productId];
+                }
+                updateCart();
+            }
+        }
+
+        function removeFromCart(productId) {
+            delete cart[productId];
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            const itemCount = document.getElementById('itemCount');
+            const subtotalEl = document.getElementById('subtotal');
+            const totalEl = document.getElementById('total');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            const items = Object.values(cart);
+            const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+            const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            itemCount.textContent = totalItems;
+            subtotalEl.textContent = formatPrice(subtotal);
+            totalEl.textContent = formatPrice(subtotal);
+
+            if (items.length === 0) {
+                cartItems.innerHTML = '<div class="cart-empty">Tu carrito está vacío</div>';
+                checkoutBtn.disabled = true;
+            } else {
+                cartItems.innerHTML = items.map(item => `
+                    <div class="cart-item">
+                        <div class="cart-item-name">${item.emoji} ${item.name}</div>
+                        <div class="cart-item-price">${formatPrice(item.price)}</div>
+                        <div class="cart-item-controls">
+                            <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">−</button>
+                            <div class="qty-display">${item.quantity}</div>
+                            <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                            <button class="btn-remove" onclick="removeFromCart(${item.id})">✕</button>
+                        </div>
+                    </div>
+                `).join('');
+                checkoutBtn.disabled = false;
+            }
+        }
+
+        function checkoutViaWhatsApp() {
+            const items = Object.values(cart);
+            if (items.length === 0) return;
+
+            const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const message = `¡Hola Asadero de Aves Poyuelos! Me gustaría hacer un pedido:\n\n${items
+                .map(item => `${item.emoji} ${item.quantity}x ${item.name} - ${formatPrice(item.price * item.quantity)}`)
+                .join('\n')}\n\n📊 Total: ${formatPrice(total)}\n\n¿Cuándo puedo recoger?`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        document.getElementById('checkoutBtn').addEventListener('click', checkoutViaWhatsApp);
+
+        renderCategory('combosGrid', products.combos);
+        renderCategory('polloAsadoGrid', products.polloAsado);
+        renderCategory('polloBrosterGrid', products.polloBroster);
+        renderCategory('platosGrid', products.platos);
+        renderCategory('adicionalesGrid', products.adicionales);
+        renderCategory('bebidasGrid', products.bebidas);
+        updateCart();
+    </script>
+</body>
+</html>
